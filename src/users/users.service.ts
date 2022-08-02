@@ -4,14 +4,17 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { LoginInput, LoginOutput } from './dtos/login.dto';
-
-import * as bcrypt from 'bcrypt';
+import * as fs from 'fs';
+import * as jwt from 'jsonwebtoken';
 import { MutationOutput } from 'src/common/dtos/output.dto';
+import { ConfigService } from '@nestjs/config';
+import * as path from 'path';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private readonly users: Repository<User>,
+    private readonly config: ConfigService,
   ) {}
 
   async createAccount({
@@ -42,7 +45,13 @@ export class UsersService {
       if (!passwordCorrect) {
         return { ok: false, error: "Password doesn't correct" };
       }
-      return { ok: true, token: '12312' };
+
+      const key = fs.readFileSync(
+        path.resolve(__dirname, '../../pem/jwtRS256.key'),
+      );
+      const token = jwt.sign({ id: loginUser.id }, key, { algorithm: 'RS256' });
+
+      return { ok: true, token };
     } catch (error) {
       console.log(error);
       return { ok: false, error };
