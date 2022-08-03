@@ -4,17 +4,16 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { LoginInput, LoginOutput } from './dtos/login.dto';
-import * as fs from 'fs';
-import * as jwt from 'jsonwebtoken';
 import { MutationOutput } from 'src/common/dtos/output.dto';
 import { ConfigService } from '@nestjs/config';
-import * as path from 'path';
+import { JwtService } from 'src/jwt/jwt.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private readonly users: Repository<User>,
     private readonly config: ConfigService,
+    private readonly jwtService: JwtService,
   ) {}
 
   async createAccount({
@@ -46,15 +45,16 @@ export class UsersService {
         return { ok: false, error: "Password doesn't correct" };
       }
 
-      const key = fs.readFileSync(
-        path.resolve(__dirname, '../../pem/jwtRS256.key'),
-      );
-      const token = jwt.sign({ id: loginUser.id }, key, { algorithm: 'RS256' });
+      const token = this.jwtService.sign({ id: loginUser.id });
 
       return { ok: true, token };
     } catch (error) {
       console.log(error);
       return { ok: false, error };
     }
+  }
+
+  async findById(id: number) {
+    return this.users.findOne({ where: { id } });
   }
 }

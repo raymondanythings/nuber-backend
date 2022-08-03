@@ -1,5 +1,5 @@
 import { UsersService } from './users.service';
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { User } from './entities/user.entity';
 import {
   CreateAccountOutput,
@@ -26,5 +26,10 @@ export class UsersResolver {
   @Mutation((returns) => LoginOutput)
   async login(@Args('input') loginInput: LoginInput): Promise<LoginOutput> {
     return this.usersService.login(loginInput);
+  }
+
+  @Query((returns) => User)
+  me(@Context() context) {
+    console.log(context.user);
   }
 }
