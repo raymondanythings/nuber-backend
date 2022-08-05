@@ -10,12 +10,10 @@ import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
-import { CommonModule } from './common/common.module';
 import { User } from './users/entities/user.entity';
 import { JwtModule } from './jwt/jwt.module';
-import * as fs from 'fs';
-import * as path from 'path';
 import { JwtMiddleware } from './jwt/jwt.middleware';
+import { AuthModule } from './auth/auth.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -51,8 +49,8 @@ import { JwtMiddleware } from './jwt/jwt.middleware';
     JwtModule.forRoot({
       isRSA: true,
     }),
-    CommonModule,
     UsersModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],
