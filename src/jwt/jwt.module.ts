@@ -1,10 +1,10 @@
 import { DynamicModule, Global, Module } from '@nestjs/common';
-import { CONFIG_OPTIONS } from './jwt.constants';
 import { JwtModuleOptions } from './jwt.interface';
 import { JwtService } from './jwt.service';
 import * as path from 'path';
 import * as fs from 'fs';
 import { Secret } from 'jsonwebtoken';
+import { CONFIG_OPTIONS } from 'src/common/common.constants';
 @Module({})
 @Global()
 export class JwtModule {

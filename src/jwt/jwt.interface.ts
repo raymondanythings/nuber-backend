@@ -2,6 +2,6 @@ import { Secret } from 'jsonwebtoken';
 
 export interface JwtModuleOptions {
   isRSA?: boolean;
-  priveKey?: Secret;
+  priveKey: Secret;
   pubkey?: Secret;
 }
