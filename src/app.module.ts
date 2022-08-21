@@ -59,6 +59,7 @@ import { RestaurantsModule } from './restaurants/restaurants.module';
       isRSA: process.env.NODE_ENV === 'prod',
       priveKey: process.env.PRIVATE_KEY,
     }),
+    AuthModule,
     UsersModule,
     RestaurantsModule,
     MailModule.forRoot({
